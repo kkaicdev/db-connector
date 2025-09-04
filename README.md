@@ -34,7 +34,7 @@ DbConnector/
 
 [!] Ajuste a configuração do banco (Server, Port, User, Passw e Db) dentro do ConsoleApp ou DbConnectionConfig.
 
---
+---
 
 ## Como rodar o projeto
 
