@@ -8,11 +8,17 @@ public class PostgreSqlAdapter : IDatabaseAdapter
     private readonly DbConnectionConfig _config;
     private NpgsqlConnection? _connection;
 
-    public PostgreSqlAdapter(DbConnectionConfig config) => _config = config;
+    public PostgreSqlAdapter(DbConnectionConfig config)
+    {
+        _config = config ?? throw new ArgumentNullException(nameof(config));
+    } 
 
     public void Connect()
     {
-        var stringBuilder = new NpgsqlConnectionStringBuilder
+        if (_connection != null)
+            return;
+
+        var connString = new NpgsqlConnectionStringBuilder
         {
             Host = _config.Server,
             Port = _config.Port,
@@ -20,39 +26,48 @@ public class PostgreSqlAdapter : IDatabaseAdapter
             Password = _config.Password,
             Database = _config.Database,
             Timeout = _config.TimeoutSeconds
-        };
-        _connection = new NpgsqlConnection(stringBuilder.ConnectionString);
+        }.ConnectionString;
+
+        _connection = new NpgsqlConnection(connString);
         _connection.Open();
+        Console.WriteLine("Connected to database.");
     }
 
     public IEnumerable<IDictionary<string, object?>> Query(string sql)
     {
-        if (_connection == null) 
-            throw new InvalidOperationException("Not connected.");
+        EnsureConnected();
 
         using var cmd = new NpgsqlCommand(sql, _connection);
         using var rdr = cmd.ExecuteReader();
-        var list = new List<IDictionary<string, object?>>();
 
         while (rdr.Read())
         {
             var row = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
             for (int i = 0; i < rdr.FieldCount; i++)
                 row[rdr.GetName(i)] = rdr.IsDBNull(i) ? null : rdr.GetValue(i);
-            list.Add(row);
-        }
 
-        return list;
+            yield return row;
+        }
     }
 
     public int Execute(string sql)
     {
-        if (_connection == null) 
-            throw new InvalidOperationException("Not connected.");
+        EnsureConnected();
 
         using var cmd = new NpgsqlCommand(sql, _connection);
         return cmd.ExecuteNonQuery();
     }
 
-    public void Dispose() => _connection?.Dispose();
+    private void EnsureConnected()
+    {
+        if (_connection == null)
+            throw new InvalidOperationException("Database connection is not established.");
+    }
+
+    public void Dispose()
+    {
+        _connection?.Dispose();
+        _connection = null;
+        Console.WriteLine("Disconnected from database.");
+    } 
 }

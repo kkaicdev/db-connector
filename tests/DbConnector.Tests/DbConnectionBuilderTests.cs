@@ -1,25 +1,42 @@
-﻿using DbConnector.Core;
-using Xunit;
+﻿using Xunit;
+using DbConnector.Core;
+using System;
 
-public class DbConnectionBuilderTests
+namespace DbConnector.Tests
 {
-    [Fact]
-    public void DbConnectionBuilder_CreateConfig()
+    public class DbConnectionBuilderTests
     {
-        var cfg = new DbConnectionBuilder()
-            .WithServer("localhost")
-            .WithPort(5432)
-            .WithDatabase("demo")
-            .WithUser("postgres")
-            .WithPassword("postgres")
-            .WithTimeout(30)
-            .Build();
+        [Fact]
+        public void Build_WithValidParameters_ReturnsConfig()
+        {
+            var config = DbConnectionBuilder.Create()
+                .WithServer("127.0.0.1")
+                .WithPort(5432)
+                .WithUser("postgres")
+                .WithPassword("admin")
+                .WithDatabase("testdb")
+                .WithTimeout(30)
+                .Build();
 
-        Assert.Equal("localhost", cfg.Server);
-        Assert.Equal(5432, cfg.Port);
-        Assert.Equal("demo", cfg.Database);
-        Assert.Equal("postgres", cfg.User);
-        Assert.Equal("postgres", cfg.Password);
-        Assert.Equal(30, cfg.TimeoutSeconds);
+            Assert.Equal("127.0.0.1", config.Server);
+            Assert.Equal(5432, config.Port);
+            Assert.Equal("postgres", config.User);
+            Assert.Equal("admin", config.Password);
+            Assert.Equal("testdb", config.Database);
+            Assert.Equal(30, config.TimeoutSeconds);
+        }
+
+        [Fact]
+        public void Build_MissingRequired_ThrowsException()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                DbConnectionBuilder.Create()
+                    .WithUser("")
+                    .WithPassword("admin")
+                    .WithServer("127.0.0.1")
+                    .Build()
+            );
+            Assert.Contains("User cannot be empty.", ex.Message);
+        }
     }
 }
