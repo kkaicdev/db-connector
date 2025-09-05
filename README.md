@@ -1,6 +1,4 @@
-﻿﻿# DbConnector
-
-DbConnector é uma biblioteca em C# que facilita a configuração e o acesso a bancos de dados.
+﻿DbConnector é uma biblioteca em C# que facilita a configuração e o acesso a bancos de dados.
 Com suporte inicial para PostgreSQL. O projeto utiliza os padrões Builder e Adapter (GOF), 
 fornecendo uma API flexível, desacoplada e fácil de usar.
 
@@ -19,14 +17,14 @@ fornecendo uma API flexível, desacoplada e fácil de usar.
 ```
 DbConnector/
 ├── src/					
-│ ├── DbConnector.Core/		      # Builder + configuração de conexão
+│ ├── DbConnector.Core/		    # Builder + configuração de conexão
 │ ├── DbConnector.Adapters/     # Adapter para PostgreSQL
 │ ├── DbConnector.Models/       # Entidades
 │ └── DbConnector.Repositories/ # Classes que encapsulam operações ao banco de dados
 ├── samples/				
-│ └── ConsoleApp/			          # Exemplo de uso
+│ └── ConsoleApp/			    # Exemplo de uso
 ├── tests/					
-│ └── DbConnector.Tests/	      # Testes
+│ └── DbConnector.Tests/	    # Testes
 ```
 
 ---
