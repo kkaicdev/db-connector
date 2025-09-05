@@ -1,14 +1,16 @@
-﻿# DbConnector
+﻿﻿# DbConnector
 
-DbConnector é uma biblioteca em C# para facilitar a configuração e o acesso a bancos de dados.
-Implementada inicialmente para PostgreSQL. O projeto utiliza os padrões GOF Builder e Adapter, para oferecer uma API flexível e desacoplada.
+DbConnector é uma biblioteca em C# que facilita a configuração e o acesso a bancos de dados.
+Com suporte inicial para PostgreSQL. O projeto utiliza os padrões Builder e Adapter (GOF), 
+fornecendo uma API flexível, desacoplada e fácil de usar.
 
 ---
 
 ## Objetivo
 
 - Fornecer uma API simples para configurar e conectar ao PostgreSQL.  
-- Servir como estrutura inicial para projetos que dependem da configuração e acesso a um banco de dados.
+- Servir como estrutura base para projetos que dependem da configuração e acesso a um banco de dados.
+- Promover um design modular, separando claramente Core, Adapters, Models e Repositories.
 
 ---
 
@@ -17,22 +19,24 @@ Implementada inicialmente para PostgreSQL. O projeto utiliza os padrões GOF Bui
 ```
 DbConnector/
 ├── src/					
-│ ├── DbConnector.Core/		# Builder + configuração de conexão
-│ └── DbConnector.Adapters/ # Adapter para PostgreSQL
+│ ├── DbConnector.Core/		      # Builder + configuração de conexão
+│ ├── DbConnector.Adapters/     # Adapter para PostgreSQL
+│ ├── DbConnector.Models/       # Entidades
+│ └── DbConnector.Repositories/ # Classes que encapsulam operações ao banco de dados
 ├── samples/				
-│ └── ConsoleApp/			# Exemplo de uso
+│ └── ConsoleApp/			          # Exemplo de uso
 ├── tests/					
-│ └── DbConnector.Tests/	# Testes
+│ └── DbConnector.Tests/	      # Testes
 ```
 
 ---
 
 ## Pré-requisitos
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)  
+- [.NET 9 SDK](https://dotnet.microsoft.com/download)  
 - [PostgreSQL](https://www.postgresql.org/download/)
 
-[!] Ajuste a configuração do banco (Server, Port, User, Passw e Db) dentro do ConsoleApp ou DbConnectionConfig.
+[!] Ajuste as credenciais/configurações do banco em ConsoleApp e DbConnectionConfig (Server, Port, User, Passw e Db).
 
 ---
 
