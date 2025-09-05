@@ -5,6 +5,7 @@
     <ProjectReference Include="..\src\DbConnector.Adapters\DbConnector.Adapters.csproj" />
     <ProjectReference Include="..\src\DbConnector.Models\User.csproj" />
     <ProjectReference Include="..\src\DbConnector.Repositories\UserRepository.csproj" />
+	<ProjectReference Include="..\src\DbConnector.Exceptions\DbConnector.Exceptions.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

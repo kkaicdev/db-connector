@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbConnector.Core\DbConnector.Core.csproj" />
+	<ProjectReference Include="..\DbConnector.Exceptions\DbConnector.Exceptions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 using Npgsql;
 using DbConnector.Core;
+using DbConnector.Exceptions;
 
 namespace DbConnector.Adapters;
 
@@ -29,8 +30,16 @@ public class PostgreSqlAdapter : IDatabaseAdapter
         }.ConnectionString;
 
         _connection = new NpgsqlConnection(connString);
-        _connection.Open();
-        Console.WriteLine("Connected to database.");
+
+        try
+        {
+            _connection.Open();
+            Console.WriteLine("Connected to database.");
+        }
+        catch (Npgsql.NpgsqlException ex)
+        {
+            throw new DatabaseConnectionException("Could not connect to database.", ex);
+        }
     }
 
     public IEnumerable<IDictionary<string, object?>> Query(string sql)

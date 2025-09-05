@@ -7,7 +7,7 @@ public class DbConnectionBuilder
     private string _user = "";
     private string _password = "";
     private string _database = "";
-    private int _timeoutSeconds = 30;
+    private int _timeoutSeconds = 10;
 
     public static DbConnectionBuilder Create() => new();
 

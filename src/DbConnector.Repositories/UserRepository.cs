@@ -1,5 +1,6 @@
 ﻿using DbConnector.Core;
 using DbConnector.Models;
+using DbConnector.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,19 +15,35 @@ public class UserRepository
     public void CreateTable()
     {
         var sql = @"
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL
-        );";
-        _db.Execute(sql);
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL
+            );";
+
+        try
+        {
+            _db.Execute(sql);
+        }
+        catch (Exception ex)
+        {
+            throw new RepositoryException("Error at creating table 'users'.", ex);
+        }
+        
     }
 
     public void InsertUsers(params string[] names)
     {
-        foreach (var name in names)
+        try
         {
-            var sql = $"INSERT INTO users(name) VALUES('{name.Replace("'", "''")}');";
-            _db.Execute(sql);
+            foreach (var name in names)
+            {
+                var sql = $"INSERT INTO users(name) VALUES('{name.Replace("'", "''")}');";
+                _db.Execute(sql);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new RepositoryException("Error inserting users.", ex);
         }
     }
 
@@ -34,13 +51,25 @@ public class UserRepository
     {
         var sql = $"SELECT id, name FROM users ORDER BY id LIMIT {limit};";
 
-        foreach (var row in _db.Query(sql))
+        try
         {
-            yield return new User
+            var results = new List<User>();
+
+            foreach (var row in _db.Query(sql))
             {
-                Id = Convert.ToInt32(row["id"]),
-                Name = row["name"]?.ToString() ?? string.Empty
-            };
+                results.Add(new User
+                {
+                    Id = Convert.ToInt32(row["id"]),
+                    Name = row["name"]?.ToString() ?? string.Empty
+                });
+            }
+
+            return results;
+        }
+        catch (Exception ex)
+        {
+            throw new RepositoryException("Error retrieving users.", ex);
         }
     }
+
 }

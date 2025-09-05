@@ -1,6 +1,7 @@
 ﻿using DbConnector.Adapters;
 using DbConnector.Core;
 using DbConnector.Repositories;
+using DbConnector.Exceptions;
 
 class ConsoleApp
 {
@@ -14,22 +15,33 @@ class AppRunner
 {
     public void Run()
     {
-        var cfg = DbConnectionBuilder.Create()
-            .WithServer("192.168.1.18")
-            .WithPort(5432)
-            .WithUser("postgres")
-            .WithPassword("admin")
-            .WithDatabase("testedb")
-            .Build();
+        try
+        {
+            var cfg = DbConnectionBuilder.Create()
+                .WithServer("localhost")
+                .WithPort(5432)
+                .WithUser("postgres")
+                .WithPassword("admin")
+                .WithDatabase("testedb")
+                .Build();
 
-        using var db = new PostgreSqlAdapter(cfg);
-        db.Connect();
+            using var db = new PostgreSqlAdapter(cfg);
+            db.Connect();
 
-        var repo = new UserRepository(db);
-        repo.CreateTable();
-        repo.InsertUsers("Flamengo", "Biskela", "Lake");
+            var repo = new UserRepository(db);
+            repo.CreateTable();
+            repo.InsertUsers("Doflamingo", "Lake", "Alaska");
 
-        foreach (var user in repo.GetUsers(100))
-            Console.WriteLine($"{user.Id}: {user.Name}");
+            foreach (var user in repo.GetUsers(100))
+                Console.WriteLine($"{user.Id}: {user.Name}");
+        }
+        catch (RepositoryException ex)
+        {
+            Console.WriteLine($"[Repository Error] {ex.Message}");
+        }
+        catch (DatabaseConnectionException ex)
+        {
+            Console.WriteLine($"[Connection Error] {ex.Message}");
+        }
     }
 }
