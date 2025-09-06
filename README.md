@@ -6,9 +6,9 @@ fornecendo uma API flexível, desacoplada e fácil de usar.
 
 ## Objetivo
 
-- Fornecer uma API simples para configurar e conectar ao PostgreSQL.  
 - Servir como estrutura base para projetos que dependem da configuração e acesso a um banco de dados.
-- Promover um design modular, separando claramente Core, Adapters, Models e Repositories.
+- Fornecer uma API simples para configurar e conectar ao PostgreSQL.  
+- Foco em modularidade.
 
 ---
 
@@ -33,8 +33,6 @@ DbConnector/
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download)  
 - [PostgreSQL](https://www.postgresql.org/download/)
-
-[!] Ajuste as credenciais/configurações do banco em ConsoleApp e DbConnectionConfig (Server, Port, User, Passw e Db).
 
 ---
 
@@ -64,6 +62,8 @@ dotnet run --project samples/ConsoleApp
 ```bash
 dotnet test
 ```
+
+[!] É esperado as credenciais/configurações do banco. Você pode ajudar em ConsoleApp ou DbConnectionBuilder.
 
 ## Licença
 
