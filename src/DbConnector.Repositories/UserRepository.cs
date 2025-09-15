@@ -12,7 +12,7 @@ public class UserRepository
 
     public UserRepository(IDatabaseAdapter db) => _db = db;
 
-    public void CreateTable()
+    public async Task CreateTableAsync()
     {
         var sql = @"
             CREATE TABLE IF NOT EXISTS users (
@@ -22,7 +22,7 @@ public class UserRepository
 
         try
         {
-            _db.Execute(sql);
+            await _db.ExecuteAsync(sql);
         }
         catch (Exception ex)
         {
@@ -31,14 +31,14 @@ public class UserRepository
         
     }
 
-    public void InsertUsers(params string[] names)
+    public async Task InsertUsersAsync(params string[] names)
     {
         try
         {
             foreach (var name in names)
             {
-                var sql = $"INSERT INTO users(name) VALUES('{name.Replace("'", "''")}');";
-                _db.Execute(sql);
+                var sql = "INSERT INTO users(name) VALUES(@name);";
+                await _db.ExecuteAsync(sql, new Dictionary<string, object?> { ["@name"] = name });
             }
         }
         catch (Exception ex)
@@ -47,29 +47,27 @@ public class UserRepository
         }
     }
 
-    public IEnumerable<User> GetUsers(int limit)
+    public async IAsyncEnumerable<User> GetUsersAsync(int limit)
     {
-        var sql = $"SELECT id, name FROM users ORDER BY id LIMIT {limit};";
+        var sql = "SELECT id, name FROM users ORDER BY id LIMIT @limit;";
 
-        try
+        await foreach (var row in _db.QueryAsync(sql, new Dictionary<string, object?> { ["@limit"] = limit }))
         {
-            var results = new List<User>();
-
-            foreach (var row in _db.Query(sql))
+            User user;
+            try
             {
-                results.Add(new User
+                user = new User
                 {
                     Id = Convert.ToInt32(row["id"]),
                     Name = row["name"]?.ToString() ?? string.Empty
-                });
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error retrieving users.", ex);
             }
 
-            return results;
-        }
-        catch (Exception ex)
-        {
-            throw new RepositoryException("Error retrieving users.", ex);
+            yield return user;
         }
     }
-
 }

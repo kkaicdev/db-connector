@@ -1,8 +1,16 @@
 namespace DbConnector.Core;
 
-public interface IDatabaseAdapter : IDisposable
+public interface IDatabaseAdapter : IAsyncDisposable
 {
-    void Connect();
-    int Execute(string sql);
-    IEnumerable<IDictionary<string, object?>> Query(string sql);
+    Task ConnectAsync();
+
+    IAsyncEnumerable<IDictionary<string, object?>> QueryAsync(
+        string sql,
+        IDictionary<string, object?>? parameters = null
+    );
+
+    Task<int> ExecuteAsync(
+        string sql,
+        IDictionary<string, object?>? parameters = null
+    );
 }

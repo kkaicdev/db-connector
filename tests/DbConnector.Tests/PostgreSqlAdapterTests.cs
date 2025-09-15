@@ -5,7 +5,7 @@ using Xunit;
 public class PostgreSqlAdapterTests
 {
     [Fact]
-    public void PostgreAdapter_Connect_ExecuteAndQuery()
+    public async Task PostgreAdapter_Connect_ExecuteAndQuery()
     {
         var cfg = new DbConnectionBuilder()
             .WithServer("192.168.1.18")
@@ -15,22 +15,30 @@ public class PostgreSqlAdapterTests
             .WithPassword("admin")
             .Build();
 
-        using var db = new PostgreSqlAdapter(cfg);
-        db.Connect();
+        await using var db = new PostgreSqlAdapter(cfg);
+        await db.ConnectAsync();
 
         try
         {
-            db.Execute("DROP TABLE IF EXISTS test_tdd;");
-            db.Execute("CREATE TABLE test_tdd(id SERIAL PRIMARY KEY, name TEXT);");
+            await db.ExecuteAsync("DROP TABLE IF EXISTS test_tdd;");
+            await db.ExecuteAsync("CREATE TABLE test_tdd(id SERIAL PRIMARY KEY, name TEXT);");
 
-            db.Execute("INSERT INTO test_tdd(name) VALUES('Alice');");
+            // Inserção 
+            await db.ExecuteAsync(
+                "INSERT INTO test_tdd(name) VALUES(@name);",
+                new Dictionary<string, object?> { ["@name"] = "Alice" }
+            );
 
-            var rows = db.Query("SELECT name FROM test_tdd");
-            Assert.Contains(rows, r => r["name"]?.ToString() == "Alice");
+            // Leitura
+            var rowsList = new List<IDictionary<string, object?>>();
+            await foreach (var r in db.QueryAsync("SELECT name FROM test_tdd"))
+                rowsList.Add(r);
+
+            Assert.Contains(rowsList, r => r["name"]?.ToString() == "Alice");
         }
         finally
         {
-            db.Execute("DROP TABLE IF EXISTS test_tdd;");
+            await db.ExecuteAsync("DROP TABLE IF EXISTS test_tdd;");
         }
 
 
