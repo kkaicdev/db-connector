@@ -46,7 +46,7 @@ class AppRunner
         try
         {
             var cfg = DbConnectionBuilder.Create()
-                .WithServer(Environment.GetEnvironmentVariable("DB_SERVER") ?? "192.168.1.18")
+                .WithServer(Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost")
                 .WithPort(int.TryParse(Environment.GetEnvironmentVariable("DB_PORT"), out var port) ? port : 5432)
                 .WithUser(Environment.GetEnvironmentVariable("DB_USER") ?? "postgres")
                 .WithPassword(Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "admin")
