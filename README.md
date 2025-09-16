@@ -17,8 +17,9 @@ fornecendo uma API flexível, desacoplada e fácil de usar.
 ```
 DbConnector/
 ├── src/					
-│ ├── DbConnector.Core/		    # Builder + configuração de conexão
 │ ├── DbConnector.Adapters/     # Adapter para PostgreSQL
+│ ├── DbConnector.Core/		    # Builder + configuração de conexão
+│ ├── DbConnector.Exceptions/   # Tratamento de exceções
 │ ├── DbConnector.Models/       # Entidades
 │ └── DbConnector.Repositories/ # Classes que encapsulam operações ao banco de dados
 ├── samples/				
@@ -33,10 +34,11 @@ DbConnector/
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download)  
 - [PostgreSQL](https://www.postgresql.org/download/)
+- [Docker](https://www.docker.com/) (opcional, para rodar containerizado)
 
 ---
 
-## Como rodar o projeto
+## Como rodar o projeto localmente
 
 1. Clone o repositório
 
@@ -51,19 +53,42 @@ cd DbConnector
 dotnet build
 ```
 
-3. Execute o ConsoleApp:
+3. Execute o ConsoleApp
 
 ```bash
 dotnet run --project samples/ConsoleApp
 ```
 
-4. Execute os testes com xUnit:
+## Como rodar o projeto via Docker
+
+1. Build da imagem
+
+```bash
+docker build -t dbconnector-app .
+```
+
+2. Rodando o container
+
+```bash
+docker run --rm dbconnector-app
+```
+
+3. Execute os testes com xUnit:
 
 ```bash
 dotnet test
 ```
 
-[!] É esperado as credenciais/configurações do banco. Você pode ajudar em ConsoleApp ou DbConnectionBuilder.
+[⚠️] Por padrão, a aplicação está configurada para se conectar a um banco PostgreSQL em `localhost:5432`.
+Você pode ajustar as credenciais/configurações do banco em ConsoleApp, DbConnectionBuilder OU passar via parâmetros pelo Docker com:
+```bash
+docker run --rm \
+  -e DB_SERVER=192.168.1.18 \
+  -e DB_USER=postgres \
+  -e DB_PASSWORD=admin \
+  -e DB_NAME=testedb \
+  dbconnector-app
+```
 
 ## Licença
 
