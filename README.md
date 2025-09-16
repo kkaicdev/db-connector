@@ -1,6 +1,6 @@
 ﻿# DbCONNECTOR
 
-DbCONNECTOR é um projeto em C# que visa facilitar o uso, configuração e o acesso a bancos de dados de diferentes fornecedores.
+DbCONNECTOR é um projeto em C# que visa facilitar o uso, configuração e o acesso a bancos de dados.
 Com suporte inicial para PostgreSQL. O projeto oferece, uma API flexível, desacoplada e fácil de usar.
 
 ---
