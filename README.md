@@ -41,9 +41,9 @@ DbConnector/
 
 ## Como rodar o projeto localmente
 
-[!] por padrão, a aplicação está configurada para se conectar a um banco PostgreSQL em `localhost:5432`.
-[!] você pode ajustar as credenciais/configurações do banco em samples/ConsoleApp.cs OU passar via parâmetros no Docker.
-[!] caso mude, também será necessário alterar o arquivo de teste.
+[!] Por padrão, a aplicação está configurada para se conectar a um banco PostgreSQL em `localhost:5432`.
+Você pode ajustar as credenciais/configurações do banco em samples/ConsoleApp.cs OU passar via parâmetros no Docker.
+(Caso mude, também será necessário alterar o arquivo de teste.)
 
 
 1. Clone o repositório
