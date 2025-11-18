@@ -41,10 +41,15 @@ DbConnector/
 
 ## Como rodar o projeto localmente
 
+[!] Por padrão, a aplicação está configurada para se conectar a um banco PostgreSQL em `localhost:5432`.
+Você pode ajustar as credenciais/configurações do banco em samples/ConsoleApp.cs OU passar via parâmetros no Docker.
+(Caso mude, também será necessário alterar o arquivo de teste.)
+
+
 1. Clone o repositório
 
 ```bash
-git clone https://github.com/kkaicdev/DbConnector.git
+git clone https://github.com/kkaicdev/db-connector.git
 ```
 
 2. Compile a solução
@@ -54,6 +59,7 @@ dotnet build
 ```
 
 3. Rode os testes com xUnit
+
 ```bash
 dotnet test
 ```
@@ -78,14 +84,7 @@ docker build -t dbconnector .
 docker run --rm dbconnector
 ```
 
-3. Execute os testes com xUnit:
-
-```bash
-dotnet test
-```
-
-⚠️ Por padrão, a aplicação está configurada para se conectar a um banco PostgreSQL em `localhost:5432`.
-Você pode ajustar as credenciais/configurações do banco em samples/ConsoleApp.cs OU passar via parâmetros pelo Docker com:
+3. Rodando o container passando as configurações via parâmetros:
 
 ```bash
 docker run --rm \
